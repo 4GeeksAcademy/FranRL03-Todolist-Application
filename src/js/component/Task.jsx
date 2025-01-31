@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 export const Task = () => {
 
-    const [newTask, setNewTask] = useState('');
+    const [ToNewTask, setToNewTask] = useState('');
     const [listTask, setListTask] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
     const [toEditTask, setToEditTask] = useState({id: null, label: '', is_done: false});
@@ -82,6 +82,36 @@ export const Task = () => {
 
     }
 
+    const addTask = async (event) => {
+
+        event.preventDefault();
+
+        if (ToNewTask.trim() === "") return;
+
+        const response = await fetch(`${base_url}/todos/fran`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    label: ToNewTask,
+                    is_done: false
+                })
+            }
+        )
+
+        if(!response.ok){
+            console.log('Error: ', response.status, response.statusText);
+            return;
+        }
+
+        const data = await response.json(); 
+        setListTask([...listTask, data]);
+
+        setToNewTask("");
+    }
+
     useEffect(() => {
         getAllPostUser()
     }, [listTask])
@@ -92,16 +122,16 @@ export const Task = () => {
             {
                 isEdit == false ?
 
-                    <form className="w-50 mx-auto" style={{ border: '2px dotted black', borderRadius: '10px', padding: '10px' }}>
+                    <form onSubmit={addTask} className="w-50 mx-auto" style={{ border: '2px dotted black', borderRadius: '10px', padding: '10px' }}>
                         <label htmlFor="addList" className="form-label">Add task</label>
-                        <input type="text" className="form-control" id="addList" value={toEditTask.label} placeholder="Add your task" />
+                        <input type="text" className="form-control" id="addList" value={ToNewTask} onChange={(e) => setToNewTask(e.target.value)} placeholder="Add your task" />
                     </form>
 
                     :
 
                     <form className="w-50 mx-auto" style={{ border: '2px dotted black', borderRadius: '10px', padding: '10px' }}>
                         <label htmlFor="editList" className="form-label">Edit task</label>
-                        <input type="text" className="form-control" id="editList" onChange={(e) => setToEditTask({ ...toEditTask, label: e.target.value })} value={toEditTask.label} />
+                        <input type="text" className="form-control" id="editList" onChange={(e) => setToEditTask({ ...toEditTask, label: e.target.value })} value={toEditTask.label || ""} />
 
                         <div className="form-check mt-3">
                             <input className="form-check-input" type="checkbox" onChange={() => setToEditTask({ ...toEditTask, is_done: !toEditTask.is_done })} checked={toEditTask.is_done || false} id="flexCheckDefault" />
