@@ -84,7 +84,7 @@ export const Task = () => {
 
     const addTask = async (event) => {
 
-        event.preventDefault();
+        // event.preventDefault();
 
         if (ToNewTask.trim() === "") return;
 
@@ -106,10 +106,10 @@ export const Task = () => {
             return;
         }
 
-        const data = await response.json(); 
-        setListTask([...listTask, data]);
-
-        setToNewTask("");
+        // const data = await response.json(); 
+        // setListTask([...listTask, data]);
+        // setToNewTask("");
+        getAllPostUser()
     }
 
     useEffect(() => {
