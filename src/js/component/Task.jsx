@@ -9,6 +9,14 @@ export const Task = () => {
 
     const base_url = 'https://playground.4geeks.com/todo'
 
+    const createUser = async () => {
+        const response = await fetch(`${base_url}/users/fran`,
+            {
+                method: 'POST',
+            }
+        )
+    }
+
     const getAllPostUser = async () => {
 
         const response = await fetch(`${base_url}/users/fran`,
@@ -17,7 +25,7 @@ export const Task = () => {
             })
 
         if (!response.ok) {
-            console.log('Error: ', response.status, response.statusText);
+            createUser()
             return;
         }
 
@@ -82,9 +90,7 @@ export const Task = () => {
 
     }
 
-    const addTask = async (event) => {
-
-        // event.preventDefault();
+    const addTask = async () => {
 
         if (ToNewTask.trim() === "") return;
 
@@ -106,15 +112,12 @@ export const Task = () => {
             return;
         }
 
-        // const data = await response.json(); 
-        // setListTask([...listTask, data]);
-        // setToNewTask("");
         getAllPostUser()
     }
 
     useEffect(() => {
         getAllPostUser()
-    }, [listTask])
+    }, [])
 
     return (
         <div className="mt-5">
